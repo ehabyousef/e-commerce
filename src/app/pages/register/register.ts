@@ -2,23 +2,15 @@ import { Component, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
-  ReactiveFormsModule,
   Validators,
   AbstractControl,
   ValidationErrors,
 } from '@angular/forms';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputTextModule } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { ButtonModule } from 'primeng/button';
-import { Router, RouterLink } from '@angular/router';
-import { Message } from 'primeng/message';
+import { Router } from '@angular/router';
 import { IRegister } from '../../core/interface/iregister';
 import { AuthService } from '../../core/services/auth-service';
-import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { SharedModule } from '../../shared/module/shared-module';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -29,21 +21,9 @@ function passwordMatchValidator(control: AbstractControl): ValidationErrors | nu
 
 @Component({
   selector: 'app-register',
-  imports: [
-    ReactiveFormsModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    SelectModule,
-    InputNumberModule,
-    ButtonModule,
-    Message,
-    RouterLink,
-    Toast,
-  ],
+  imports: [SharedModule],
   templateUrl: './register.html',
   styleUrl: './register.scss',
-  providers: [MessageService],
 })
 export class Register {
   // Modern typed reactive form - single declaration
@@ -129,9 +109,13 @@ export class Register {
   SignUp(data: IRegister) {
     this.authService.register(data).subscribe({
       next: (res) => {
-        this.router.navigate(['/auth/login'])
+        this.router.navigate(['/auth/login']);
         if (res.id) {
           this.show('success', 'success', 'sign up successed');
+          const { email, password } = data;
+          this.authService.login({ email, password }).subscribe((next) => {
+            this.router.navigate(['user']);
+          });
         }
       },
       error: (err) => {

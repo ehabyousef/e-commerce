@@ -1,42 +1,16 @@
 import { Component, signal } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-} from '@angular/forms';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputTextModule } from 'primeng/inputtext';
-import { SelectModule } from 'primeng/select';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { ButtonModule } from 'primeng/button';
-import { Router, RouterLink } from '@angular/router';
-import { Message } from 'primeng/message';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../../core/services/auth-service';
-import { Toast } from 'primeng/toast';
 import { ILogin } from '../../core/interface/iregister';
 import { MessageService } from 'primeng/api';
+import { SharedModule } from '../../shared/module/shared-module';
 
 @Component({
   selector: 'app-login',
-  imports: [
-    ReactiveFormsModule,
-    InputGroupModule,
-    InputGroupAddonModule,
-    InputTextModule,
-    SelectModule,
-    InputNumberModule,
-    ButtonModule,
-    Message,
-    RouterLink,
-    Toast,
-  ],
+  imports: [SharedModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
-  providers: [MessageService],
 })
 export class Login {
   constructor(
@@ -46,28 +20,24 @@ export class Login {
   ) {}
   isSibmitting = signal(false);
   loginForm = new FormGroup({
-    username: new FormControl('', [
-      Validators.required,
-      Validators.minLength(3),
-      Validators.maxLength(22),
-    ]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
   });
 
-  get username() {
-    return this.loginForm.controls.username;
+  get email() {
+    return this.loginForm.controls.email;
   }
 
   get password() {
     return this.loginForm.controls.password;
   }
 
-  shouldShowError(controlName: 'username' | 'password'): boolean {
+  shouldShowError(controlName: 'email' | 'password'): boolean {
     const control = this.loginForm.controls[controlName];
     return !!(control.invalid && control.touched);
   }
 
-  getErrorMessage(controlName: 'username' | 'password'): string {
+  getErrorMessage(controlName: 'email' | 'password'): string {
     const control = this.loginForm.controls[controlName];
     if (control.hasError('required')) {
       return `${controlName} is required`;

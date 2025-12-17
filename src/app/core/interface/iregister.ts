@@ -5,6 +5,6 @@ export interface IRegister {
   repassword: string | null;
 }
 export interface ILogin {
-  username: string | null;
+  email: string | null;
   password: string | null;
 }
