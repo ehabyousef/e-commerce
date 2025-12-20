@@ -14,7 +14,7 @@
         <!-- Name Input -->
         <div class="space-y-2">
           <label for="name" class="block text-sm font-medium text-slate-700 dark:text-slate-300">
-            Username
+            userName
           </label>
           <p-inputgroup>
             <p-inputgroup-addon>
@@ -22,18 +22,18 @@
             </p-inputgroup-addon>
             <input
               id="name"
-              formControlName="name"
+              formControlName="userName"
               pInputText
               placeholder="Enter your username"
               class="w-full"
             />
           </p-inputgroup>
           <div class="valid">
-            @if (shouldShowError('name')) {
+            @if (shouldShowError('userName')) {
             <p-message
               severity="error"
               icon="pi pi-times-circle"
-              [text]="getErrorMessage('name')"
+              [text]="getErrorMessage('userName')"
               styleClass="mb-2"
             />}
           </div>
@@ -99,7 +99,7 @@
         </div>
 
         <!-- Confirm Password Input -->
-        <div class="space-y-2">
+        <!-- <div class="space-y-2">
           <label
             for="repassword"
             class="block text-sm font-medium text-slate-700 dark:text-slate-300"
@@ -135,7 +135,7 @@
             />
             }
           </div>
-        </div>
+        </div> -->
 
         <!-- Submit Button -->
         <div class="pt-4">

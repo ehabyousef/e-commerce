@@ -40,6 +40,6 @@ import { MessageService } from 'primeng/api';
     RouterLink,
     Toast,
   ],
-   providers: [MessageService],
+  providers: [MessageService],
 })
 export class SharedModule {}

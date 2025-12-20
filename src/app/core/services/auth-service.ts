@@ -1,20 +1,46 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { env } from 'process';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BaseUrl } from '../apiRoot/baseUrl';
 import { ILogin, IRegister } from '../interface/iregister';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private _httpClient: HttpClient) {}
+  private readonly _httpClient = inject(HttpClient);
+  private readonly _platformId = inject(PLATFORM_ID);
 
   register(userData: IRegister): Observable<any> {
-    return this._httpClient.post(`${BaseUrl}/users`, userData);
+    return this._httpClient.post(`${BaseUrl}/auth/register`, userData);
   }
+
   login(userData: ILogin): Observable<any> {
     return this._httpClient.post(`${BaseUrl}/auth/login`, userData);
+  }
+
+  setToken(token: string): void {
+    if (isPlatformBrowser(this._platformId)) {
+      localStorage.setItem('token', token);
+    }
+  }
+
+  getToken(): string | null {
+    if (isPlatformBrowser(this._platformId)) {
+      return localStorage.getItem('token');
+    }
+    return null;
+  }
+
+  logout(): void {
+    if (isPlatformBrowser(this._platformId)) {
+      localStorage.removeItem('token');
+    }
+  }
+
+  get isAuthenticated(): boolean {
+    const token = this.getToken();
+    return !!token;
   }
 }

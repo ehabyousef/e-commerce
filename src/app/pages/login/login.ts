@@ -18,7 +18,7 @@ export class Login {
     private messageService: MessageService,
     private router: Router
   ) {}
-  isSibmitting = signal(false);
+  isSubmitting = signal(false);
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
@@ -56,15 +56,14 @@ export class Login {
   // Type-safe access to form values
   Submit() {
     if (this.loginForm.valid) {
-      this.isSibmitting.set(true);
+      this.isSubmitting.set(true);
       try {
         const formData = this.loginForm.getRawValue(); // Fully typed!
         this.Login(formData);
-        console.log(formData);
       } catch (error) {
         this.show('error', 'error', 'sign up failed');
       } finally {
-        this.isSibmitting.set(false);
+        this.isSubmitting.set(false);
       }
     } else {
       this.loginForm.markAllAsTouched();
@@ -74,23 +73,28 @@ export class Login {
   Login(data: ILogin) {
     this.authService.login(data).subscribe({
       next: (res) => {
-        this.router.navigate(['/user']);
-        if (res.id) {
+        if (res.token) {
           this.show('success', 'success', 'sign in successed');
+          localStorage.setItem('token', res.token);
+          setTimeout(() => {
+            this.router.navigate(['user']);
+          }, 1000);
         }
       },
       error: (err) => {
-        console.log(err);
-        this.show('error', 'error', 'sign in failed');
+        console.error('Login error:', err);
+        const errorMessage = err.error?.message || 'Invalid email or password';
+        this.show('error', 'Login Failed', errorMessage);
       },
     });
   }
+
   show(severity: string, summary: string, detail: string) {
     this.messageService.add({
       severity: severity,
       summary: summary,
       detail: detail,
-      life: 1500,
+      life: 2000,
     });
   }
 }

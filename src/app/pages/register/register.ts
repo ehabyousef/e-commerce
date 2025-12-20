@@ -35,22 +35,22 @@ export class Register {
   isSibmitting = signal(false);
   registerForm = new FormGroup(
     {
-      name: new FormControl('', [
+      userName: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
         Validators.maxLength(22),
       ]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      repassword: new FormControl('', [Validators.required]),
+      // repassword: new FormControl('', [Validators.required]),
     },
     {
       validators: passwordMatchValidator,
     }
   );
 
-  get name() {
-    return this.registerForm.controls.name;
+  get userName() {
+    return this.registerForm.controls.userName;
   }
 
   get email() {
@@ -61,16 +61,16 @@ export class Register {
     return this.registerForm.controls.password;
   }
 
-  get repassword() {
-    return this.registerForm.controls.repassword;
-  }
+  // get repassword() {
+  //   return this.registerForm.controls.repassword;
+  // }
 
-  shouldShowError(controlName: 'name' | 'email' | 'password' | 'repassword'): boolean {
+  shouldShowError(controlName: 'userName' | 'email' | 'password'): boolean {
     const control = this.registerForm.controls[controlName];
     return !!(control.invalid && control.touched);
   }
 
-  getErrorMessage(controlName: 'name' | 'email' | 'password' | 'repassword'): string {
+  getErrorMessage(controlName: 'userName' | 'email' | 'password'): string {
     const control = this.registerForm.controls[controlName];
     if (control.hasError('required')) {
       return `${controlName} is required`;
@@ -110,11 +110,12 @@ export class Register {
     this.authService.register(data).subscribe({
       next: (res) => {
         this.router.navigate(['/auth/login']);
-        if (res.id) {
+        if (res.token) {
           this.show('success', 'success', 'sign up successed');
           const { email, password } = data;
           this.authService.login({ email, password }).subscribe((next) => {
             this.router.navigate(['user']);
+            localStorage.setItem('token', res.token);
           });
         }
       },

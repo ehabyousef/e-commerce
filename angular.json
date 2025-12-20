@@ -28,10 +28,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss",
-              "node_modules/ngx-spinner/animations/pacman.css"
-            ],
+            "styles": ["src/styles.scss", "node_modules/ngx-spinner/animations/pacman.css"],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
@@ -94,5 +91,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "1e4ee670-590c-4317-aae0-fe0e6e61c1c4"
   }
 }

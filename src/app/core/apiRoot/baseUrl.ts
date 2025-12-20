@@ -1,1 +1,1 @@
-export const BaseUrl = 'https://fakestoreapi.com';
+export const BaseUrl = 'https://hedaya-api.vercel.app/api';
