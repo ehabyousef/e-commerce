@@ -33,21 +33,16 @@ export class Register {
     private router: Router
   ) {}
   isSibmitting = signal(false);
-  registerForm = new FormGroup(
-    {
-      userName: new FormControl('', [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(22),
-      ]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      // repassword: new FormControl('', [Validators.required]),
-    },
-    {
-      validators: passwordMatchValidator,
-    }
-  );
+  registerForm = new FormGroup({
+    userName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(22),
+    ]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    // repassword: new FormControl('', [Validators.required]),
+  });
 
   get userName() {
     return this.registerForm.controls.userName;
@@ -93,22 +88,20 @@ export class Register {
   Submit() {
     if (this.registerForm.valid) {
       this.isSibmitting.set(true);
-      try {
-        const formData = this.registerForm.getRawValue(); // Fully typed!
-        this.SignUp(formData);
-      } catch (error) {
-        this.show('error', 'error', 'sign up failed');
-      } finally {
-        this.isSibmitting.set(false);
-      }
+      const formData = this.registerForm.getRawValue();
+      console.log('Submitting form data:', formData);
+      this.SignUp(formData);
     } else {
       this.registerForm.markAllAsTouched();
+      console.warn('Form is invalid:', this.registerForm.errors || this.registerForm.value);
     }
   }
 
   SignUp(data: IRegister) {
     this.authService.register(data).subscribe({
       next: (res) => {
+        this.isSibmitting.set(false);
+        this.registerForm.reset();
         this.router.navigate(['/auth/login']);
         if (res.token) {
           this.show('success', 'success', 'sign up successed');
@@ -120,11 +113,13 @@ export class Register {
         }
       },
       error: (err) => {
-        console.log(err);
+        this.isSibmitting.set(false);
+        console.error('Registration error:', err);
         this.show('error', 'error', 'sign up failed');
       },
     });
   }
+
   show(severity: string, summary: string, detail: string) {
     this.messageService.add({
       severity: severity,

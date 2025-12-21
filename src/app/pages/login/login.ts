@@ -57,14 +57,8 @@ export class Login {
   Submit() {
     if (this.loginForm.valid) {
       this.isSubmitting.set(true);
-      try {
-        const formData = this.loginForm.getRawValue(); // Fully typed!
-        this.Login(formData);
-      } catch (error) {
-        this.show('error', 'error', 'sign up failed');
-      } finally {
-        this.isSubmitting.set(false);
-      }
+      const formData = this.loginForm.getRawValue(); // Fully typed!
+      this.Login(formData);
     } else {
       this.loginForm.markAllAsTouched();
     }
@@ -77,7 +71,7 @@ export class Login {
           this.show('success', 'success', 'sign in successed');
           localStorage.setItem('token', res.token);
           setTimeout(() => {
-            this.router.navigate(['user']);
+            this.router.navigate(['home']);
           }, 1000);
         }
       },
@@ -94,7 +88,7 @@ export class Login {
       severity: severity,
       summary: summary,
       detail: detail,
-      life: 2000,
+      life: 1500,
     });
   }
 }
