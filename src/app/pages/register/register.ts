@@ -11,6 +11,7 @@ import { IRegister } from '../../core/interface/iregister';
 import { AuthService } from '../../core/services/auth-service';
 import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../shared/module/shared-module';
+import { UserData } from '../../core/services/user-data';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -30,7 +31,8 @@ export class Register {
   constructor(
     private authService: AuthService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private _userData: UserData
   ) {}
   isSibmitting = signal(false);
   registerForm = new FormGroup({
@@ -102,6 +104,8 @@ export class Register {
       next: (res) => {
         this.isSibmitting.set(false);
         this.registerForm.reset();
+        this._userData.userName.next(res.user.userName);
+        localStorage.setItem('userName', res.user.userName);
         this.router.navigate(['/auth/login']);
         if (res.token) {
           this.show('success', 'success', 'sign up successed');

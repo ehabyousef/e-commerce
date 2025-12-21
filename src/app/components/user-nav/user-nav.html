@@ -1,13 +1,13 @@
 <div class="card">
   <p-menubar [model]="items">
     <ng-template #start>
-      <figure>
+      <a routerLink="/home">
         <img
           src="https://cdn.dribbble.com/userupload/17039932/file/original-983633d1f6de58f5d871f174ff34f057.jpg?resize=400x0"
           alt="Brand Logo"
           class="h-8 w-auto cursor-pointer"
         />
-      </figure>
+      </a>
     </ng-template>
     <ng-template #item let-item let-root="root">
       <a
@@ -33,9 +33,15 @@
     </ng-template>
     <ng-template #end>
       <div class="flex items-center gap-2">
-        <a routerLink="cart">
-          <i class="pi pi-shopping-cart" style="font-size: 1.5rem"></i>
+        <a routerLink="cart" class="relative">
+          <i
+            class="pi pi-shopping-cart text-2xl mr-2"
+            pBadge
+            [value]="CartLength.toString()"
+            severity="danger"
+          ></i>
         </a>
+        @defer (on immediate) {
         <p-avatar
           (click)="op.toggle($event)"
           image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
@@ -45,7 +51,7 @@
         <p-popover #op>
           <div class="flex flex-col gap-4 w-[10rem]">
             <div class="flex items-center gap-2 justify-center">
-              <span class="font-medium text-surface-900 dark:text-surface-0">Ehab Yousef</span>
+              <span class="font-medium text-surface-900 dark:text-surface-0">{{ user }}</span>
             </div>
             @if (logged()) {
             <div class="flex items-center gap-2 justify-center" (click)="logout()">
@@ -57,9 +63,20 @@
                 [rounded]="true"
               />
             </div>
+            }@else {
+            <a class="flex items-center gap-2 justify-center" routerLink="auth/login">
+              <p-button
+                severity="warn"
+                variant="outlined"
+                label="Log in"
+                icon="pi pi-sign-in"
+                [rounded]="true"
+              />
+            </a>
             }
           </div>
         </p-popover>
+        }
       </div>
     </ng-template>
   </p-menubar>

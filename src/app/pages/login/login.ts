@@ -5,6 +5,7 @@ import { AuthService } from '../../core/services/auth-service';
 import { ILogin } from '../../core/interface/iregister';
 import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../shared/module/shared-module';
+import { UserData } from '../../core/services/user-data';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,8 @@ export class Login {
   constructor(
     private authService: AuthService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private _userData: UserData
   ) {}
   isSubmitting = signal(false);
   loginForm = new FormGroup({
@@ -70,6 +72,8 @@ export class Login {
         if (res.token) {
           this.show('success', 'success', 'sign in successed');
           localStorage.setItem('token', res.token);
+          localStorage.setItem('userName', res.user.userName);
+          this._userData.userName.next(res.user.userName);
           setTimeout(() => {
             this.router.navigate(['home']);
           }, 1000);

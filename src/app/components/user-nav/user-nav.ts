@@ -1,15 +1,16 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
 import { MenuItem, PrimeIcons } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Ripple } from 'primeng/ripple';
 import { Menubar } from 'primeng/menubar';
 import { Router, RouterLink } from '@angular/router';
 import { Popover } from 'primeng/popover';
 import { Button } from 'primeng/button';
 import { AuthService } from '../../core/services/auth-service';
+import { UserData } from '../../core/services/user-data';
 @Component({
   selector: 'app-user-nav',
   imports: [
@@ -27,9 +28,16 @@ import { AuthService } from '../../core/services/auth-service';
   styleUrl: './user-nav.scss',
 })
 export class UserNav {
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private _userData: UserData
+  ) {}
+  private platformId = inject(PLATFORM_ID);
   items: MenuItem[] | undefined;
   logged = signal(false);
+  user: string = '';
+  CartLength: Number = 0;
   ngOnInit() {
     this.items = [
       {
@@ -63,11 +71,25 @@ export class UserNav {
         ],
       },
     ];
-    this.logged.set(this.authService.isAuthenticated);
-    console.log(this.logged());
+    if (isPlatformBrowser(this.platformId)) {
+      this.logged.set(this.authService.isAuthenticated);
+      this.user = this._userData.userName.value;
+      console.log('User logged status:', this.logged());
+
+      // Fetch cart count if user is logged in
+      if (this.logged()) {
+        this.CartCount();
+      }
+    }
   }
   logout = () => {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
   };
+
+  CartCount(): void {
+    this._userData
+      .getCartCount()
+      .subscribe((next) => (this.CartLength = next.data.products.length));
+  }
 }
