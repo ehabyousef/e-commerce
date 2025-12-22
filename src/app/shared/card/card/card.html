@@ -1,0 +1,29 @@
+<div
+  [class]="
+    isSmallCard ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4' : 'grid grid-cols-6 gap-4'
+  "
+>
+  @for (product of Products; track $index) {
+  <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
+    <div class="mb-4">
+      <div class="relative mx-auto">
+        <img [src]="product.defaultImage.url" [alt]="product.name" class="w-full rounded-border" />
+        <p-tag
+          [value]="product.status"
+          severity="warn"
+          class="absolute dark:!bg-surface-900"
+          [ngStyle]="{ 'left.px': 5, 'top.px': 5 }"
+        />
+      </div>
+    </div>
+    <div class="mb-4 font-medium">{{ product.name }}</div>
+    <div class="flex justify-between items-center">
+      <div class="mt-0 font-semibold text-xl">{{ '$' + product.finalPrice }}</div>
+      <span>
+        <p-button icon="pi pi-heart" severity="secondary" [outlined]="true" />
+        <p-button icon="pi pi-shopping-cart" styleClass="ml-2" />
+      </span>
+    </div>
+  </div>
+  }
+</div>
