@@ -71,7 +71,7 @@ export class Login {
       next: (res) => {
         if (res.token) {
           this.show('success', 'success', 'sign in successed');
-          localStorage.setItem('token', res.token);
+          this.authService.setToken(res.token);
           localStorage.setItem('userName', res.user.userName);
           this._userData.userName.next(res.user.userName);
           setTimeout(() => {

@@ -9,9 +9,9 @@ import {
 import { Router } from '@angular/router';
 import { IRegister } from '../../core/interface/iregister';
 import { AuthService } from '../../core/services/auth-service';
-import { MessageService } from 'primeng/api';
 import { SharedModule } from '../../shared/module/shared-module';
 import { UserData } from '../../core/services/user-data';
+import { Notifications } from '../../core/services/notifications';
 
 function passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
   const password = control.get('password')?.value;
@@ -30,11 +30,12 @@ export class Register {
   // Modern typed reactive form - single declaration
   constructor(
     private authService: AuthService,
-    private messageService: MessageService,
     private router: Router,
-    private _userData: UserData
+    private _userData: UserData,
+    private _Notification: Notifications
   ) {}
   isSibmitting = signal(false);
+  isRegisred: boolean = false;
   registerForm = new FormGroup({
     userName: new FormControl('', [
       Validators.required,
@@ -93,6 +94,7 @@ export class Register {
       const formData = this.registerForm.getRawValue();
       console.log('Submitting form data:', formData);
       this.SignUp(formData);
+      this.isRegisred = true;
     } else {
       this.registerForm.markAllAsTouched();
       console.warn('Form is invalid:', this.registerForm.errors || this.registerForm.value);
@@ -108,7 +110,7 @@ export class Register {
         localStorage.setItem('userName', res.user.userName);
         this.router.navigate(['/auth/login']);
         if (res.token) {
-          this.show('success', 'success', 'sign up successed');
+          this._Notification.Toast('success', 'success', 'sign up successed', 1500);
           const { email, password } = data;
           this.authService.login({ email, password }).subscribe((next) => {
             this.router.navigate(['user']);
@@ -119,17 +121,17 @@ export class Register {
       error: (err) => {
         this.isSibmitting.set(false);
         console.error('Registration error:', err);
-        this.show('error', 'error', 'sign up failed');
+        this._Notification.Toast('error', 'error', 'sign up failed', 1500);
       },
     });
   }
 
-  show(severity: string, summary: string, detail: string) {
-    this.messageService.add({
-      severity: severity,
-      summary: summary,
-      detail: detail,
-      life: 1500,
-    });
-  }
+  // show(severity: string, summary: string, detail: string) {
+  //   this.messageService.add({
+  //     severity: severity,
+  //     summary: summary,
+  //     detail: detail,
+  //     life: 1500,
+  //   });
+  // }
 }

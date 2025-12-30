@@ -6,15 +6,17 @@ import { CommonModule } from '@angular/common';
 import { Card } from '../../shared/card/card/card';
 import { UserData } from '../../core/services/user-data';
 import { IProduct } from '../../core/interface/IProducts';
+import { PopularPipe } from '../../core/pipes/popular-pipe';
+import { Products } from '../../core/services/products';
 @Component({
   selector: 'app-home',
-  imports: [CarouselModule, ButtonModule, TagModule, CommonModule, Card],
+  imports: [CarouselModule, ButtonModule, TagModule, CommonModule, Card, PopularPipe],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
 export class Home {
   products: IProduct[] = [];
-  constructor(private _userData: UserData) {}
+  constructor(private _products: Products) {}
   responsiveOptions: any[] | undefined;
   ngOnInit() {
     this.responsiveOptions = [
@@ -43,7 +45,7 @@ export class Home {
   }
 
   getProducts(): void {
-    this._userData
+    this._products
       .allProducts()
       .subscribe((next) => ((this.products = next.slice(0, 4)), console.log(this.products)));
   }

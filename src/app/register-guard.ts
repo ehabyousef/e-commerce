@@ -8,7 +8,7 @@ export const registerGuard: CanDeactivateFn<Register> = (
   nextState
 ) => {
   // Check if form is dirty or valid before confirming
-  if (component.registerForm.dirty || component.registerForm.valid) {
+  if (component.registerForm.dirty || component.registerForm.valid && !component.isRegisred) {
     const alert = window.confirm('Are you sure you want to leave this page?');
     return alert;
   }

@@ -5,7 +5,7 @@
 >
   @for (product of Products; track $index) {
   <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
-    <div class="mb-4">
+    <div [routerLink]="['/details', product._id]" class="mb-4 cursor-pointer">
       <div class="relative mx-auto">
         <img [src]="product.defaultImage.url" [alt]="product.name" class="w-full rounded-border" />
         <p-tag
@@ -21,7 +21,22 @@
       <div class="mt-0 font-semibold text-xl">{{ '$' + product.finalPrice }}</div>
       <span>
         <p-button icon="pi pi-heart" severity="secondary" [outlined]="true" />
-        <p-button icon="pi pi-shopping-cart" styleClass="ml-2" />
+        @if(!isProductInCart(product._id)){
+        <p-button
+          (onClick)="
+            addToCart({ productId: product._id, quantity: product.quantity, price: product.price })
+          "
+          icon="pi pi-cart-plus"
+          styleClass="ml-2"
+        />
+        }@else {
+        <p-button
+          severity="danger"
+          (onClick)="removeFromCart(product._id)"
+          icon="pi pi-cart-minus"
+          styleClass="ml-2"
+        />
+        }
       </span>
     </div>
   </div>

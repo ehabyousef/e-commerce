@@ -15,9 +15,31 @@ export interface IProduct {
   updatedAt: string;
   finalPrice: string;
   id: string;
+  quantity?: number | 1;
 }
 
 export interface IProductImage {
   id: string;
   url: string;
+}
+
+export interface AddCart {
+  productId?: string;
+  quantity?: number | 1;
+  price?: number;
+}
+
+interface Product {
+  id: string;
+  _id: string;
+  name: string;
+  price: number;
+  finalPrice: string;
+  defaultImage: IProductImage;
+}
+
+export interface CartItemResponse {
+  price: number;
+  quantity: number;
+  product: Product;
 }

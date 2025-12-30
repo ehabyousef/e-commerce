@@ -11,6 +11,7 @@ import { Popover } from 'primeng/popover';
 import { Button } from 'primeng/button';
 import { AuthService } from '../../core/services/auth-service';
 import { UserData } from '../../core/services/user-data';
+import { Cart } from '../../core/services/cart';
 @Component({
   selector: 'app-user-nav',
   imports: [
@@ -31,6 +32,7 @@ export class UserNav {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private _Cart: Cart,
     private _userData: UserData
   ) {}
   private platformId = inject(PLATFORM_ID);
@@ -79,17 +81,20 @@ export class UserNav {
       // Fetch cart count if user is logged in
       if (this.logged()) {
         this.CartCount();
+        // Subscribe to cart updates
+        this._Cart.cartUpdated.subscribe(() => {
+          this.CartCount();
+        });
       }
     }
   }
+
   logout = () => {
     this.authService.logout();
     this.router.navigate(['/auth/login']);
   };
 
   CartCount(): void {
-    this._userData
-      .getCartCount()
-      .subscribe((next) => (this.CartLength = next.data.products.length));
+    this._Cart.getCartProducts().subscribe((next) => (this.CartLength = next.data.products.length));
   }
 }

@@ -9,9 +9,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { RouterLink } from '@angular/router';
 import { Message } from 'primeng/message';
-import { Toast } from 'primeng/toast';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 @NgModule({
   declarations: [],
   imports: [
@@ -25,7 +23,7 @@ import { MessageService } from 'primeng/api';
     ButtonModule,
     Message,
     RouterLink,
-    Toast,
+
   ],
   exports: [
     CommonModule,
@@ -38,8 +36,8 @@ import { MessageService } from 'primeng/api';
     ButtonModule,
     Message,
     RouterLink,
-    Toast,
+
   ],
-  providers: [MessageService],
+
 })
 export class SharedModule {}

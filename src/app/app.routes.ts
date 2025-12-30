@@ -35,5 +35,9 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: 'details/:id',
+    loadComponent: () => import('./pages/details/details').then((c) => c.Details),
+  },
   { path: '**', redirectTo: 'auth/login' }, // Catch-all route for 404s
 ];
