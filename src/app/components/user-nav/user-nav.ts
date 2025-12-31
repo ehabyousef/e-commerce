@@ -1,4 +1,4 @@
-import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { MenuItem, PrimeIcons } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
@@ -35,7 +35,6 @@ export class UserNav {
     private _Cart: Cart,
     private _userData: UserData
   ) {}
-  private platformId = inject(PLATFORM_ID);
   items: MenuItem[] | undefined;
   logged = signal(false);
   user: string = '';
@@ -73,19 +72,17 @@ export class UserNav {
         ],
       },
     ];
-    if (isPlatformBrowser(this.platformId)) {
-      this.logged.set(this.authService.isAuthenticated);
-      this.user = this._userData.userName.value;
-      console.log('User logged status:', this.logged());
+    this.logged.set(this.authService.isAuthenticated);
+    this.user = this._userData.userName.value;
+    console.log('User logged status:', this.logged());
 
-      // Fetch cart count if user is logged in
-      if (this.logged()) {
+    // Fetch cart count if user is logged in
+    if (this.logged()) {
+      this.CartCount();
+      // Subscribe to cart updates
+      this._Cart.cartUpdated.subscribe(() => {
         this.CartCount();
-        // Subscribe to cart updates
-        this._Cart.cartUpdated.subscribe(() => {
-          this.CartCount();
-        });
-      }
+      });
     }
   }
 

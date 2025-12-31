@@ -7,7 +7,11 @@
   <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
     <div [routerLink]="['/details', product._id]" class="mb-4 cursor-pointer">
       <div class="relative mx-auto">
-        <img [src]="product.defaultImage.url" [alt]="product.name" class="w-full rounded-border" />
+        <img
+          [src]="product.defaultImage.url"
+          [alt]="product.name"
+          class="w-full h-[300px] object-contain rounded-border"
+        />
         <p-tag
           [value]="product.status"
           severity="warn"
@@ -40,5 +44,8 @@
       </span>
     </div>
   </div>
+  }@empty {
+  <p class="text-center text-3xl my-3 capitalize">no products found</p>
+  <app-empty></app-empty>
   }
 </div>

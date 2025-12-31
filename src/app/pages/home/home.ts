@@ -7,7 +7,7 @@ import { Card } from '../../shared/card/card/card';
 import { UserData } from '../../core/services/user-data';
 import { IProduct } from '../../core/interface/IProducts';
 import { PopularPipe } from '../../core/pipes/popular-pipe';
-import { Products } from '../../core/services/products';
+import { ProductsService } from '../../core/services/products';
 @Component({
   selector: 'app-home',
   imports: [CarouselModule, ButtonModule, TagModule, CommonModule, Card, PopularPipe],
@@ -16,7 +16,7 @@ import { Products } from '../../core/services/products';
 })
 export class Home {
   products: IProduct[] = [];
-  constructor(private _products: Products) {}
+  constructor(private _products: ProductsService) {}
   responsiveOptions: any[] | undefined;
   ngOnInit() {
     this.responsiveOptions = [

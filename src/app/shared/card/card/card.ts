@@ -6,10 +6,11 @@ import { AddCart, CartItemResponse, IProduct } from '../../../core/interface/IPr
 import { RouterLink } from '@angular/router';
 import { Cart } from '../../../core/services/cart';
 import { Notifications } from '../../../core/services/notifications';
+import { Empty } from '../../empty/empty/empty';
 
 @Component({
   selector: 'app-card',
-  imports: [Tag, Button, NgStyle, RouterLink],
+  imports: [Tag, Button, NgStyle, RouterLink, Empty],
   templateUrl: './card.html',
   styleUrl: './card.scss',
 })

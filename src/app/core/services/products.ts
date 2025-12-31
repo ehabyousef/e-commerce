@@ -6,7 +6,7 @@ import { BaseUrl } from '../apiRoot/baseUrl';
 @Injectable({
   providedIn: 'root',
 })
-export class Products {
+export class ProductsService {
   constructor(private _httpClient: HttpClient) {}
   allProducts(): Observable<any> {
     return this._httpClient.get(`${BaseUrl}/products`);

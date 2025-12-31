@@ -28,7 +28,10 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.scss", "node_modules/ngx-spinner/animations/pacman.css"],
+            "styles": [
+              "src/styles.scss",
+              "node_modules/ngx-spinner/animations/ball-zig-zag-deflect.css"
+            ],
             "server": "src/main.server.ts",
             "outputMode": "server",
             "ssr": {
