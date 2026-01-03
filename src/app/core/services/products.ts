@@ -11,4 +11,7 @@ export class ProductsService {
   allProducts(): Observable<any> {
     return this._httpClient.get(`${BaseUrl}/products`);
   }
+  filteredProducts(id: string): Observable<any> {
+    return this._httpClient.get(`${BaseUrl}/products/filter?categoryId=${id}`);
+  }
 }

@@ -5,8 +5,22 @@
       <p-inputicon class="pi pi-search" />
       <input [(ngModel)]="searchKey" type="text" pInputText placeholder="Search by name" />
     </p-iconfield>
-    @defer (on idle) {
-    <app-card [isSmallCard]="true" [Products]="allProducts | searchName : searchKey"></app-card>
-    }
+    <div class="grid grid-cols-12">
+      <div class="col-span-2 flex flex-col gap-4 my-3">
+        @for (category of categories; track $index) {
+        <p-button
+          [routerLink]="['/products', category._id]"
+          [label]="category.name"
+          severity="contrast"
+          [style]="{ width: '8rem' }"
+        />
+        }
+      </div>
+      <div class="col-span-10">
+        @defer (on idle) {
+        <app-card [isSmallCard]="true" [Products]="allProducts | searchName : searchKey"></app-card>
+        }
+      </div>
+    </div>
   </div>
 </section>

@@ -43,3 +43,13 @@ export interface CartItemResponse {
   quantity: number;
   product: Product;
 }
+
+export interface ICategory {
+  _id: string;
+  name: string;
+  description: string;
+  slug: string;
+  createdBy: string | null;
+  createdAt: string;
+  updatedAt: string;
+}

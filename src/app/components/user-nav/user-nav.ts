@@ -1,3 +1,4 @@
+import { CategoryService } from './../../core/services/category.service';
 import { Component, inject, signal } from '@angular/core';
 import { MenuItem, PrimeIcons } from 'primeng/api';
 import { BadgeModule } from 'primeng/badge';
@@ -12,6 +13,7 @@ import { Button } from 'primeng/button';
 import { AuthService } from '../../core/services/auth-service';
 import { UserData } from '../../core/services/user-data';
 import { Cart } from '../../core/services/cart';
+import { ICategory } from '../../core/interface/IProducts';
 @Component({
   selector: 'app-user-nav',
   imports: [
@@ -33,12 +35,14 @@ export class UserNav {
     private authService: AuthService,
     private router: Router,
     private _Cart: Cart,
-    private _userData: UserData
+    private _userData: UserData,
+    private _CategoryService: CategoryService
   ) {}
   items: MenuItem[] | undefined;
   logged = signal(false);
   user: string = '';
   CartLength: Number = 0;
+  categories: ICategory[] = [];
   ngOnInit() {
     this.items = [
       {
@@ -77,8 +81,8 @@ export class UserNav {
     console.log('User logged status:', this.logged());
 
     // Fetch cart count if user is logged in
+    this.CartCount();
     if (this.logged()) {
-      this.CartCount();
       // Subscribe to cart updates
       this._Cart.cartUpdated.subscribe(() => {
         this.CartCount();
@@ -92,6 +96,10 @@ export class UserNav {
   };
 
   CartCount(): void {
-    this._Cart.getCartProducts().subscribe((next) => (this.CartLength = next.data.products.length));
+    if (this.logged()) {
+      this._Cart
+        .getCartProducts()
+        .subscribe((next) => (this.CartLength = next.data.products.length));
+    }
   }
 }
