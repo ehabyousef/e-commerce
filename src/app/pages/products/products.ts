@@ -10,6 +10,7 @@ import { SearchNamePipe } from '../../core/pipes/search-name.pipe';
 import { CategoryService } from '../../core/services/category.service';
 import { Button } from 'primeng/button';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { map, switchMap } from 'rxjs';
 @Component({
   selector: 'app-products',
   imports: [
@@ -38,12 +39,22 @@ export class Products {
   categType: string = '';
   ngOnInit(): void {
     this.getCategories();
-    this.categType = this._route.snapshot.paramMap.get('filter') ?? '';
-    if (this.categType === '') {
-      this.getAllProducts();
-    } else {
-      this.getFilteredProducts(this.categType);
-    }
+    this._route.paramMap
+      .pipe(
+        map((params) => params.get('filter') ?? ''),
+        switchMap((id) => {
+          this.categType = id;
+          if (id === '') {
+            return this._productService.allProducts();
+          } else {
+            return this._productService.filteredProducts(id).pipe(map((res) => res.data));
+          }
+        })
+      )
+      .subscribe({
+        next: (res) => (this.allProducts = res),
+        error: (err) => console.log(err),
+      });
   }
 
   getAllProducts() {

@@ -7,6 +7,12 @@
     </p-iconfield>
     <div class="grid grid-cols-12">
       <div class="col-span-2 flex flex-col gap-4 my-3">
+        <p-button
+          [routerLink]="['/products']"
+          label="All"
+          severity="contrast"
+          [style]="{ width: '8rem' }"
+        />
         @for (category of categories; track $index) {
         <p-button
           [routerLink]="['/products', category._id]"
