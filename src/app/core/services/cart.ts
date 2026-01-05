@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { BaseUrl } from '../apiRoot/baseUrl';
 import { AuthService } from './auth-service';
 import { AddCart } from '../interface/IProducts';
@@ -10,24 +10,48 @@ import { AddCart } from '../interface/IProducts';
 })
 export class Cart {
   cartUpdated = new BehaviorSubject<void>(undefined);
+  cartNumber = new BehaviorSubject<number>(0);
 
   constructor(private _httpClient: HttpClient, private authServ: AuthService) {}
 
   getCartProducts(): Observable<any> {
-    return this._httpClient.get(`${BaseUrl}/cart/allCart`, {
-      headers: { Authorization: `Bearer ${this.authServ.getToken()}` },
-    });
+    return this._httpClient
+      .get(`${BaseUrl}/cart/allCart`, {
+        headers: { Authorization: `Bearer ${this.authServ.getToken()}` },
+      })
+      .pipe(
+        tap((res: any) => {
+          if (res && res.data && res.data.products) {
+            this.cartNumber.next(res.data.products.length);
+          }
+        })
+      );
   }
 
   addToCart(data: AddCart): Observable<any> {
-    return this._httpClient.post(`${BaseUrl}/cart/addToCart`, data, {
-      headers: { Authorization: `Bearer ${this.authServ.getToken()}` },
-    });
+    return this._httpClient
+      .post(`${BaseUrl}/cart/addToCart`, data, {
+        headers: { Authorization: `Bearer ${this.authServ.getToken()}` },
+      })
+      .pipe(
+        tap(() => {
+          this.getCartProducts().subscribe();
+          this.cartUpdated.next();
+        })
+      );
   }
+
   removeFromCart(productId: string): Observable<any> {
-    return this._httpClient.delete(`${BaseUrl}/cart/removeFromCart`, {
-      body: { productId },
-      headers: { Authorization: `Bearer ${this.authServ.getToken()}` },
-    });
+    return this._httpClient
+      .delete(`${BaseUrl}/cart/removeFromCart`, {
+        body: { productId },
+        headers: { Authorization: `Bearer ${this.authServ.getToken()}` },
+      })
+      .pipe(
+        tap(() => {
+          this.getCartProducts().subscribe();
+          this.cartUpdated.next();
+        })
+      );
   }
 }

@@ -24,7 +24,7 @@ export interface IProductImage {
 }
 
 export interface AddCart {
-  productId?: string;
+  productId?: string | null;
   quantity?: number | 1;
   price?: number;
 }

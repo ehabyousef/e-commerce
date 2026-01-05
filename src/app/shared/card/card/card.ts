@@ -23,36 +23,31 @@ export class Card implements OnInit {
 
   ngOnInit() {
     this.getCart();
+    this._cart.cartUpdated.subscribe(() => {
+      this.getCart();
+    });
   }
 
   addToCart(data: AddCart) {
     this._cart.addToCart(data).subscribe({
-      next: (response) => {
-        console.log('Added to cart:', response);
-        this.getCart();
-        this._cart.cartUpdated.next();
+      next: () => {
         this._Notification.Toast('success', 'added to cart', 'listed in your cart', 1500);
       },
       error: (error) => {
         console.error('Error adding to cart:', error);
         this._Notification.Toast('error', 'not added to cart', 'an expected error', 1000);
-        // Handle error (show toast notification, etc.)
       },
     });
   }
 
   removeFromCart(productId: string) {
     this._cart.removeFromCart(productId).subscribe({
-      next: (response) => {
-        console.log('removed from cart:', response);
-        this.getCart();
-        this._cart.cartUpdated.next();
+      next: () => {
         this._Notification.Toast('warn', 'removed from cart', 'unlisted from your cart', 1500);
       },
       error: (error) => {
-        console.error('Error adding to cart:', error);
-        this._Notification.Toast('error', 'not added to cart', 'an expected error', 1000);
-        // Handle error (show toast notification, etc.)
+        console.error('Error removing from cart:', error);
+        this._Notification.Toast('error', 'not removed from cart', 'an expected error', 1000);
       },
     });
   }

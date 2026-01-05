@@ -81,11 +81,11 @@ export class UserNav {
     console.log('User logged status:', this.logged());
 
     // Fetch cart count if user is logged in
-    this.CartCount();
     if (this.logged()) {
-      // Subscribe to cart updates
-      this._Cart.cartUpdated.subscribe(() => {
-        this.CartCount();
+      this.CartCount();
+      // Subscribe to cart number directly for real-time updates
+      this._Cart.cartNumber.subscribe((count) => {
+        this.CartLength = count;
       });
     }
   }

@@ -34,15 +34,15 @@ export const routes: Routes = [
         canActivate: [authGuard],
       },
       {
+        path: 'details/:id',
+        loadComponent: () => import('./pages/details/details').then((c) => c.Details),
+      },
+      {
         path: 'cart',
         loadComponent: () => import('./pages/cart/cart').then((c) => c.Cart),
         canActivate: [authGuard],
       },
     ],
-  },
-  {
-    path: 'details/:id',
-    loadComponent: () => import('./pages/details/details').then((c) => c.Details),
   },
   { path: '**', redirectTo: 'auth/login' }, // Catch-all route for 404s
 ];

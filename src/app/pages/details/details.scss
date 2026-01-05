@@ -1,0 +1,63 @@
+.custom-galleria {
+  .p-galleria-thumbnail-container {
+    background: transparent;
+    padding: 1rem 0;
+  }
+
+  .p-galleria-item-next,
+  .p-galleria-item-prev {
+    background: rgba(255, 255, 255, 0.8);
+    color: var(--primary-color);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    backdrop-filter: blur(4px);
+    transition: all 0.3s;
+
+    &:hover {
+      background: white;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.quantity-picker {
+  .p-inputnumber-input {
+    width: 4rem;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+    background: transparent;
+  }
+
+  .p-inputnumber-button {
+    background: #f3f4f6;
+    border: none;
+    color: #4b5563;
+    width: 2.5rem;
+    height: 2.5rem;
+
+    &:hover {
+      background: #e5e7eb;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-tag-success {
+    background: #ecfdf5;
+    color: #059669;
+  }
+
+  .p-tag-info {
+    background: #eff6ff;
+    color: #2563eb;
+  }
+
+  .p-divider-horizontal {
+    margin: 2rem 0;
+    &:before {
+      border-top: 1px solid #f3f4f6;
+    }
+  }
+}

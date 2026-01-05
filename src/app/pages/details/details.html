@@ -1,1 +1,201 @@
-<p>details works!</p>
+<section class="py-12 bg-gray-50 min-h-screen">
+  <div class="container mx-auto px-4 max-w-7xl">
+    <!-- Loading State -->
+    @if (!product) {
+    <div class="flex flex-col justify-center items-center h-96">
+      <i class="pi pi-spin pi-spinner text-5xl text-primary mb-4"></i>
+      <p class="text-gray-500 font-medium">Loading product details...</p>
+    </div>
+    } @else {
+    <!-- Breadcrumb -->
+    <nav class="mb-8" aria-label="Breadcrumb">
+      <ol class="flex text-sm text-gray-500 items-center gap-2">
+        <li>
+          <a
+            [routerLink]="['/home']"
+            class="hover:text-primary transition-colors flex items-center gap-1"
+          >
+            <i class="pi pi-home text-xs"></i> Home
+          </a>
+        </li>
+        <li class="flex items-center gap-2">
+          <i class="pi pi-chevron-right text-[10px]"></i>
+          <a
+            [routerLink]="['/products', product.category._id]"
+            class="hover:text-primary transition-colors"
+          >
+            {{ product.category.name }}
+          </a>
+        </li>
+        <li class="flex items-center gap-2">
+          <i class="pi pi-chevron-right text-[10px]"></i>
+          <span class="font-semibold text-gray-800">{{ product.name }}</span>
+        </li>
+      </ol>
+    </nav>
+
+    <div
+      class="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white p-6 md:p-10 rounded-3xl shadow-[0_10px_40px_-15px_rgba(0,0,0,0.05)] border border-gray-100"
+    >
+      <!-- Left: Image Gallery -->
+      <div class="gallery-container">
+        @if (galleryImages && galleryImages.length > 0) {
+        <p-galleria
+          [value]="galleryImages"
+          [responsiveOptions]="responsiveOptions"
+          [containerStyle]="{ 'max-width': '100%' }"
+          [numVisible]="5"
+          [showItemNavigators]="true"
+          [circular]="true"
+          class="custom-galleria"
+        >
+          <ng-template pTemplate="item" let-item>
+            <div class="relative overflow-hidden rounded-2xl group">
+              <img
+                [src]="item.url"
+                [alt]="product.name"
+                class="w-full aspect-square object-cover transform transition-transform duration-700 group-hover:scale-110"
+              />
+            </div>
+          </ng-template>
+          <ng-template pTemplate="thumbnail" let-item>
+            <div class="p-1">
+              <img
+                [src]="item.url"
+                [alt]="product.name"
+                class="w-20 aspect-square object-cover rounded-xl border-2 border-transparent hover:border-primary transition-all cursor-pointer"
+              />
+            </div>
+          </ng-template>
+        </p-galleria>
+        }
+      </div>
+
+      <!-- Right: Product Info -->
+      <div class="flex flex-col">
+        <div class="mb-6">
+          <div class="flex items-center gap-3 mb-4">
+            <p-tag
+              [value]="product.status"
+              [severity]="product.status === 'new' ? 'success' : 'info'"
+              class="px-3 py-1 text-xs uppercase tracking-wider font-bold rounded-full"
+            />
+            <span class="text-sm text-gray-400 font-medium tracking-wide"
+              >REF: {{ product._id | slice : -8 }}</span
+            >
+          </div>
+          <h1
+            class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-2 leading-tight tracking-tight"
+          >
+            {{ product.name }}
+          </h1>
+          <div class="flex items-center gap-2 text-gray-500 font-medium">
+            <span>{{ product.subCategory.name }}</span>
+            <span class="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
+            <span>{{ product.category.name }}</span>
+          </div>
+        </div>
+
+        <div class="flex items-baseline gap-4 mb-8">
+          <span class="text-4xl font-black text-primary">{{
+            product.price | currency : 'EGP '
+          }}</span>
+          @if (product.discount > 0) {
+          <p class="text-xl text-gray-400 line-through decoration-red-400">
+            {{ product.price + (product.price * product.discount) / 100 | currency : 'EGP ' }}
+          </p>
+          <span class="bg-red-50 text-red-600 px-2 py-1 rounded-md text-sm font-bold"
+            >-{{ product.discount }}%</span
+          >
+          }
+        </div>
+
+        <p-divider class="my-0" />
+
+        <div class="py-8">
+          <h3 class="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+            <i class="pi pi-align-left text-primary"></i> Description
+          </h3>
+          <p class="text-gray-600 leading-relaxed text-base">{{ product.description }}</p>
+        </div>
+
+        <div class="space-y-8 mt-auto">
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-bold text-gray-700 uppercase tracking-widest"
+                >Select Quantity</span
+              >
+              <span class="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-md">
+                <i class="pi pi-check-circle mr-1"></i> {{ product.availableItems }} In Stock
+              </span>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-6">
+              <p-inputNumber
+                [(ngModel)]="quantity"
+                [showButtons]="true"
+                buttonLayout="horizontal"
+                spinnerMode="horizontal"
+                inputId="horizontal"
+                decrementButtonClass="p-button-secondary p-button-text p-button-rounded"
+                incrementButtonClass="p-button-secondary p-button-text p-button-rounded"
+                incrementButtonIcon="pi pi-plus"
+                decrementButtonIcon="pi pi-minus"
+                [min]="1"
+                [max]="product.availableItems"
+                class="quantity-picker"
+              >
+              </p-inputNumber>
+
+              <div class="flex-1 flex gap-3">
+                <p-button
+                  (onClick)="addCart({productId,quantity,price})"
+                  icon="pi pi-shopping-cart"
+                  label="Add to Basket"
+                  class="flex-1"
+                  styleClass="w-full h-14 bg-primary border-none hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 font-bold text-lg rounded-2xl"
+                />
+                <p-button
+                  icon="pi pi-heart"
+                  styleClass="h-14 w-14 border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 transition-all rounded-2xl"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 gap-4 py-6 bg-gray-50 rounded-2xl px-6 border border-dashed border-gray-200"
+          >
+            <div class="flex items-center gap-3 text-sm text-gray-600">
+              <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                <i class="pi pi-truck text-primary"></i>
+              </div>
+              <span class="font-medium">Express Delivery</span>
+            </div>
+            <div class="flex items-center gap-3 text-sm text-gray-600">
+              <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                <i class="pi pi-refresh text-primary"></i>
+              </div>
+              <span class="font-medium">30-Day Returns</span>
+            </div>
+            <div class="flex items-center gap-3 text-sm text-gray-600">
+              <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                <i class="pi pi-shield text-primary"></i>
+              </div>
+              <span class="font-medium">Secure Payment</span>
+            </div>
+            <div class="flex items-center gap-3 text-sm text-gray-600">
+              <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                <i class="pi pi-user text-primary"></i>
+              </div>
+              <span
+                >Seller: <b class="text-gray-900">{{ product.createdBy.userName }}</b></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</section>
