@@ -56,7 +56,7 @@ export class Details implements OnInit {
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _Cart: Cart,
-    private _productsService: ProductsService,
+    // private _productsService: ProductsService,
     private _Notification: Notifications
   ) {}
 
@@ -70,9 +70,10 @@ export class Details implements OnInit {
   }
 
   getProductDetails(id: string): void {
-    this._productsService.getSingleProduct(id).subscribe({
+    // this._productsService.getSingleProduct(id)
+    this._activatedRoute.data.subscribe({
       next: (res: any) => {
-        const data = res.data;
+        const data = res.details.data;
         if (data) {
           this.galleryImages = [data.defaultImage, ...(data.images || [])];
           this.product = data;

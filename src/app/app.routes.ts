@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guard/auth.guard';
 import { registerGuard } from './register-guard';
+import { myDetailsResolver } from './core/guard/my-details.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -36,6 +37,7 @@ export const routes: Routes = [
       {
         path: 'details/:id',
         loadComponent: () => import('./pages/details/details').then((c) => c.Details),
+        resolve: { details: myDetailsResolver },
       },
       {
         path: 'cart',
