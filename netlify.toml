@@ -1,0 +1,15 @@
+[build.environment]
+  NPM_FLAGS = "--legacy-peer-deps"
+
+[build]
+  base = "."
+  command = "npm run build"
+  publish = "dist/e-commerce/browser"
+
+[[plugins]]
+  package = "@netlify/angular-runtime"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
